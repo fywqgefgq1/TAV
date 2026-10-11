@@ -53,14 +53,14 @@ class Block(ASTNode):
 
 class Assign(ASTNode):
     def __init__(self, target, value, pos):
-        self.target = target  # Var | ArrayAccess
-        self.value = value    # Expr
+        self.target = target
+        self.value = value
         self.pos = pos
 
 class TupleAssign(ASTNode):
     def __init__(self, targets, call, pos):
-        self.targets = targets  # [Var, ...]
-        self.call = call        # FuncCall
+        self.targets = targets
+        self.call = call
         self.pos = pos
 
 class IfStmt(ASTNode):
@@ -73,7 +73,7 @@ class IfStmt(ASTNode):
 class WhileStmt(ASTNode):
     def __init__(self, cond, invariant, body, pos):
         self.cond = cond
-        self.invariant = invariant  # predicate or None
+        self.invariant = invariant
         self.body = body
         self.pos = pos
 
@@ -139,7 +139,7 @@ class LengthExpr(ASTNode):
 
 class Quantifier(ASTNode):
     def __init__(self, kind, var_name, var_type, predicate, pos):
-        self.kind = kind        # "forall" | "exists"
+        self.kind = kind
         self.var_name = var_name
         self.var_type = var_type
         self.predicate = predicate
@@ -204,10 +204,8 @@ class Parser:
                     depth -= 1
                 else:
                     break
-            
             self.advance()
 
-    # ---- Top-level ----
     def parse_program(self):
         functions = []
         formulas = []
@@ -215,10 +213,8 @@ class Parser:
             try:
                 tok = self.peek()
                 if tok[0] == 'FUNCTION':
-                    # Handles: function main() ...
                     functions.append(self.parse_function())
                 elif tok[0] == 'ID':
-                    # Handles: main() ... (keyword omitted) OR formula: id() => ...
                     self.parse_top_level_def(functions, formulas)
                 else:
                     raise ParseError(f"Expected function or formula definition, got {tok[0]}", tok[2])
@@ -229,7 +225,6 @@ class Parser:
         return Program(functions, formulas)
 
     def parse_function(self):
-        """Parses a function when the explicit 'function' keyword is present."""
         pos = self.expect('FUNCTION')[2]
         name = self.expect('ID')[1]
         self.expect('LPAREN')
@@ -262,7 +257,7 @@ class Parser:
         self.expect('RPAREN')
 
         if self.peek()[0] == 'ARROW':
-            self.advance() # consume ARROW
+            self.advance()
             pred = self.parse_predicate()
             self.expect('SEMI')
             formulas.append(Formula(name, params, pred, pos))
@@ -369,7 +364,6 @@ class Parser:
         return AssumeStmt(expr, pos)
 
     def parse_assignment_or_error(self):
-        """Handles: var = expr; | arr[i] = expr; | x, y = f(); """
         pos = self.peek()[2]
         first_name = self.expect('ID')[1]
 
@@ -486,8 +480,7 @@ class Parser:
             saved = self.pos
             name = self.advance()[1]
             if self.peek()[0] == 'LPAREN' and name != 'length':
-                # Formula reference
-                self.advance()  # consume LPAREN
+                self.advance()
                 args = self._parse_expr_list()
                 self.expect('RPAREN')
                 return FormulaRef(name, args, tok[2])
