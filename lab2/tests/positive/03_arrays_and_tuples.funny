@@ -1,0 +1,15 @@
+get_min_max(a: int[], len: int) returns min: int, max: int {
+    min = a[0];
+    max = a[0];
+    i = 1;
+    while (i < len) {
+        if (a[i] < min) {
+            min = a[i];
+        }
+        i = i + 1;
+    }
+}
+
+test_tuples(arr: int[]) returns x: int, y: int {
+    x, y = get_min_max(arr, 5);
+}

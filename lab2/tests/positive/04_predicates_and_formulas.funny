@@ -1,0 +1,12 @@
+is_positive(x: int) => x > 0;
+
+abs(x: int) returns r: int
+requires x != 0
+ensures r > 0
+{
+    if (x < 0) {
+        r = -x;
+    } else {
+        r = x;
+    }
+}

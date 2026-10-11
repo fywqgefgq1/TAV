@@ -355,9 +355,9 @@ TOKENS = [
     ("NOT",      r"not"),
     ("AND",      r"and"),
     ("OR",       r"or"),
-    ("ARROW",    r"→"),
+    ("ARROW",    r"(→|=>)"),
     ("LENGTH",   r"length"),
-    ("ID",       r"[a-zA-Z_][a-zA-Z0-9]*"),
+    ("ID",       r"[a-zA-Z_][a-zA-Z0-9_]*"),
     ("INT",      r"0|[1-9][0-9]*"),
     ("EQ",       r"=="),
     ("NEQ",      r"!="),
@@ -394,20 +394,20 @@ def compile_tokens(tokens):
         nfa.add(global_start, EPS, s)
         nfa.accept[e] = (name, prio)
 
-    print(f"[NFA] states = {nfa.next_id}, "
-          f"transitions = {sum(len(v) for v in nfa.trans.values())}")
+    # print(f"[NFA] states = {nfa.next_id}, "
+    #       f"transitions = {sum(len(v) for v in nfa.trans.values())}")
 
     dfa_states, dfa_trans, dfa_accept, start = build_dfa(nfa, global_start)
-    print(f"[DFA] states = {len(dfa_states)}, transitions = {len(dfa_trans)}")
+    # print(f"[DFA] states = {len(dfa_states)}, transitions = {len(dfa_trans)}")
 
     min_states, min_trans, min_accept, min_start, trap = minimize_dfa(
         dfa_states, dfa_trans, dfa_accept, start
     )
-    print(f"[MIN] states = {len(min_states)}, "
-          f"transitions = {len(min_trans)}, trap = {trap}")
+    # print(f"[MIN] states = {len(min_states)}, "
+    #       f"transitions = {len(min_trans)}, trap = {trap}")
 
     alphabet = sorted({c for (_, c) in min_trans.keys()})
-    print(f"[ALPHABET] {len(alphabet)} symbols")
+    #print(f"[ALPHABET] {len(alphabet)} symbols")
 
     return min_states, min_trans, min_accept, min_start, trap, alphabet
 

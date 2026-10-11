@@ -1,0 +1,15 @@
+sum(n: int) returns r: int {
+    i = 0;
+    r = 0;
+    while (i < n)
+        invariant 0 <= i and i <= n
+    {
+        r = r + i;
+        i = i + 1;
+    }
+    if (r < 0) {
+        assert false;
+    } else {
+        assume r >= 0;
+    }
+}

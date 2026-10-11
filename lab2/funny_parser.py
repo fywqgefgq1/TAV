@@ -1,6 +1,8 @@
 import json
 import sys
 import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from funny_dfa_maker import TOKENS, compile_tokens, tokenize
 
 _old_stdout = sys.stdout
@@ -184,40 +186,49 @@ class Parser:
             return self.advance()
         return None
 
+    def expect_keyword(self, keyword):
+        tok = self.peek()
+        if tok[0] == 'ID' and tok[1] == keyword:
+            return self.advance()
+        if tok[0] == keyword.upper():
+            return self.advance()
+        raise ParseError(f"Expected '{keyword}', got {tok[0]} ('{tok[1]}')", tok[2])
+
+    def match_keyword(self, keyword):
+        tok = self.peek()
+        if tok[0] == 'ID' and tok[1] == keyword:
+            return self.advance()
+        if tok[0] == keyword.upper():
+            return self.advance()
+        return None
+
     def error_recovery(self):
-        sync = {'SEMI', 'RBRACE', 'EOF', 'FUNCTION', 'IF', 'WHILE', 
-                'ASSERT', 'ASSUME', 'RETURNS', 'REQUIRES', 'ENSURES', 'USES'}
-        
-        depth = 0
-        while True:
-            tok_type = self.peek()[0]
-
-            if tok_type in sync and depth == 0:
-                if tok_type == 'SEMI':
-                    self.advance()
-                break
-
-            if tok_type == 'LBRACE':
-                depth += 1
-            elif tok_type == 'RBRACE':
-                if depth > 0:
-                    depth -= 1
-                else:
-                    break
+        if self.peek()[0] != 'EOF':
+            self.advance()
+            
+        sync = {'SEMI', 'RBRACE', 'EOF', 'IF', 'WHILE', 
+                'RETURNS', 'REQUIRES', 'ENSURES', 'USES', 'ID'}
+        while self.peek()[0] not in sync:
+            self.advance()
+            
+        if self.peek()[0] == 'SEMI':
             self.advance()
 
     def parse_program(self):
+        if self.peek()[0] == 'EOF':
+            raise ParseError("Empty input: expected at least one function or formula definition", 0)
+            
         functions = []
         formulas = []
         while self.peek()[0] != 'EOF':
             try:
                 tok = self.peek()
-                if tok[0] == 'FUNCTION':
+                if tok[0] == 'ID' and tok[1] == 'function':
                     functions.append(self.parse_function())
                 elif tok[0] == 'ID':
                     self.parse_top_level_def(functions, formulas)
                 else:
-                    raise ParseError(f"Expected function or formula definition, got {tok[0]}", tok[2])
+                    raise ParseError(f"Expected 'function' or formula definition, got {tok[0]}", tok[2])
             except ParseError as e:
                 self.errors.append(str(e))
                 print(f"Parse Error: {e}", file=sys.stderr)
@@ -225,19 +236,22 @@ class Parser:
         return Program(functions, formulas)
 
     def parse_function(self):
-        pos = self.expect('FUNCTION')[2]
+        pos = self.expect_keyword('function')[2]
         name = self.expect('ID')[1]
         self.expect('LPAREN')
         params = self._parse_var_defs()
         self.expect('RPAREN')
-        
+
         requires = None
         if self.match('REQUIRES'):
             requires = self.parse_predicate()
-            
+
         self.expect('RETURNS')
         returns = self._parse_var_defs()
-        
+
+        if requires is None and self.match('REQUIRES'):
+            requires = self.parse_predicate()
+
         ensures = None
         if self.match('ENSURES'):
             ensures = self.parse_predicate()
@@ -265,18 +279,16 @@ class Parser:
             requires = None
             if self.match('REQUIRES'):
                 requires = self.parse_predicate()
-                
             self.expect('RETURNS')
             returns = self._parse_var_defs()
-            
+            if requires is None and self.match('REQUIRES'):
+                requires = self.parse_predicate()
             ensures = None
             if self.match('ENSURES'):
                 ensures = self.parse_predicate()
-                
             uses = []
             if self.match('USES'):
                 uses = self._parse_var_defs()
-                
             body = self.parse_statement()
             functions.append(Function(name, params, returns, requires, ensures, uses, body, pos))
 
@@ -308,9 +320,9 @@ class Parser:
                 return self.parse_if()
             if tok[0] == 'WHILE':
                 return self.parse_while()
-            if tok[0] == 'ASSERT':
+            if tok[0] == 'ID' and tok[1] == 'assert':
                 return self.parse_assert()
-            if tok[0] == 'ASSUME':
+            if tok[0] == 'ID' and tok[1] == 'assume':
                 return self.parse_assume()
             if tok[0] == 'ID':
                 return self.parse_assignment_or_error()
@@ -352,21 +364,21 @@ class Parser:
         return WhileStmt(cond, invariant, body, pos)
 
     def parse_assert(self):
-        pos = self.expect('ASSERT')[2]
-        expr = self.parse_expr()
+        pos = self.expect_keyword('assert')[2]
+        expr = self.parse_predicate()
         self.expect('SEMI')
         return AssertStmt(expr, pos)
 
     def parse_assume(self):
-        pos = self.expect('ASSUME')[2]
-        expr = self.parse_expr()
+        pos = self.expect_keyword('assume')[2]
+        expr = self.parse_predicate()
         self.expect('SEMI')
         return AssumeStmt(expr, pos)
 
     def parse_assignment_or_error(self):
         pos = self.peek()[2]
         first_name = self.expect('ID')[1]
-
+        
         if self.peek()[0] == 'COMMA':
             targets = [Var(first_name, pos)]
             while self.match('COMMA'):
@@ -376,7 +388,7 @@ class Parser:
             call = self._parse_func_call()
             self.expect('SEMI')
             return TupleAssign(targets, call, pos)
-
+            
         if self.peek()[0] == 'LBRACK':
             self.advance()
             idx = self.parse_expr()
@@ -386,7 +398,7 @@ class Parser:
             value = self.parse_expr()
             self.expect('SEMI')
             return Assign(target, value, pos)
-
+            
         self.expect('ASSIGN')
         value = self.parse_expr()
         self.expect('SEMI')
@@ -476,6 +488,7 @@ class Parser:
             p = self.parse_predicate()
             self.expect('RPAREN')
             return p
+            
         if tok[0] == 'ID':
             saved = self.pos
             name = self.advance()[1]
@@ -487,6 +500,7 @@ class Parser:
             else:
                 self.pos = saved
                 return self._parse_comparison_in_predicate()
+                
         return self._parse_comparison_in_predicate()
 
     def _parse_comparison_in_predicate(self):
@@ -509,7 +523,7 @@ class Parser:
             self.expect('LBRACK')
             self.expect('RBRACK')
             var_type = "int[]"
-        self.expect('PIPE') if False else None
+            
         pred = self.parse_predicate()
         self.expect('RPAREN')
         return Quantifier(kind, var_name, var_type, pred, tok[2])
@@ -601,24 +615,22 @@ class Parser:
             exprs.append(self.parse_expr())
         return exprs
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python parser.py <input.funny>", file=sys.stderr)
-        sys.exit(1)
-
+def main():      
     with open(sys.argv[1], 'r', encoding='utf-8') as f:
         text = f.read()
-
+        
     tokens = tokenize(text, TRANS, ACCEPT, START, TRAP)
     parser = Parser(tokens)
     ast = parser.parse_program()
-
+    
     result = {
         "ast": _serialize(ast),
         "errors": parser.errors
     }
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-
+    json_str = json.dumps(result, indent=2, ensure_ascii=False)
+    with open("ast.json", "w", encoding="utf-8") as f:
+        f.write(json_str)
+    
     if parser.errors:
         sys.exit(1)
 

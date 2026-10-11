@@ -1,0 +1,7 @@
+main() returns r: int {
+    while (i < )
+        invariant 0 <= i
+    {
+        r = r + 1;
+    }
+}
