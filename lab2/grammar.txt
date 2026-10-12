@@ -1,46 +1,46 @@
-Program         -> (Function | Formula)*
+Program         ::= (Function | Formula)*
 
-Function        -> 'function' ID '(' VarDefs ')' ['requires' Predicate] 'returns' VarDefs ['ensures' Predicate] ['uses' VarDefs] Statement
+Function        ::= 'function' ID '(' VarDefs ')' ['requires' Predicate] 'returns' VarDefs ['ensures' Predicate] ['uses' VarDefs] Statement
                  | ID '(' VarDefs ')' ['requires' Predicate] 'returns' VarDefs ['ensures' Predicate] ['uses' VarDefs] Statement
 
-Formula         -> ID '(' VarDefs ')' '=>' Predicate ';'
+Formula         ::= ID '(' VarDefs ')' '=>' Predicate ';'
 
-VarDefs         -> [VarDef (',' VarDef)*]
-VarDef          -> ID ':' Type
-Type            -> ID ['[' ']']
+VarDefs         ::= [VarDef (',' VarDef)*]
+VarDef          ::= ID ':' Type
+Type            ::= ID ['[' ']']
 
-Statement       -> Block | IfStmt | WhileStmt | AssertStmt | AssumeStmt | Assignment
+Statement       ::= Block | IfStmt | WhileStmt | AssertStmt | AssumeStmt | Assignment
 
-Block           -> '{' Statement* '}'
+Block           ::= '{' Statement* '}'
 
-IfStmt          -> 'if' '(' Condition ')' Statement ['else' Statement]
+IfStmt          ::= 'if' '(' Condition ')' Statement ['else' Statement]
 
-WhileStmt       -> 'while' '(' Condition ')' ['invariant' Predicate] Statement
+WhileStmt       ::= 'while' '(' Condition ')' ['invariant' Predicate] Statement
 
-AssertStmt      -> 'assert' Expr ';'
+AssertStmt      ::= 'assert' Expr ';'
 
-AssumeStmt      -> 'assume' Expr ';'
+AssumeStmt      ::= 'assume' Expr ';'
 
-Assignment      -> TupleAssign | ArrayAssign | SimpleAssign
+Assignment      ::= TupleAssign | ArrayAssign | SimpleAssign
 
-TupleAssign     -> ID (',' ID)* '=' FuncCall ';'
-ArrayAssign     -> ID '[' Expr ']' '=' Expr ';'
-SimpleAssign    -> ID '=' Expr ';'
+TupleAssign     ::= ID (',' ID)* '=' FuncCall ';'
+ArrayAssign     ::= ID '[' Expr ']' '=' Expr ';'
+SimpleAssign    ::= ID '=' Expr ';'
 
-Condition       -> OrExpr ['->' Condition]
-OrExpr          -> AndExpr ('or' AndExpr)*
-AndExpr         -> NotExpr ('and' NotExpr)*
-NotExpr         -> 'not' NotExpr | Comparison
-Comparison      -> Expr [('==' | '!=' | '>=' | '<=' | '>' | '<') Expr]
+Condition       ::= OrExpr ['::=' Condition]
+OrExpr          ::= AndExpr ('or' AndExpr)*
+AndExpr         ::= NotExpr ('and' NotExpr)*
+NotExpr         ::= 'not' NotExpr | Comparison
+Comparison      ::= Expr [('==' | '!=' | '>=' | '<=' | '>' | '<') Expr]
 
-Expr            -> Additive
-Additive        -> Multiplicative (('+' | '-') Multiplicative)*
-Multiplicative  -> Unary (('*' | '/') Unary)*
-Unary           -> '-' Unary | Postfix
+Expr            ::= Additive
+Additive        ::= Multiplicative (('+' | '-') Multiplicative)*
+Multiplicative  ::= Unary (('*' | '/') Unary)*
+Unary           ::= '-' Unary | Postfix
 
-Postfix         -> Primary ('[' Expr ']')*
+Postfix         ::= Primary ('[' Expr ']')*
 
-Primary         -> INT 
+Primary         ::= INT 
                  | TRUE 
                  | FALSE 
                  | 'length' '(' Expr ')' 
@@ -48,22 +48,22 @@ Primary         -> INT
                  | '(' Expr ')' 
                  | FuncCall
 
-FuncCall        -> ID '(' ExprList ')'
-ExprList        -> [Expr (',' Expr)*]
+FuncCall        ::= ID '(' ExprList ')'
+ExprList        ::= [Expr (',' Expr)*]
 
-Predicate       -> PredOr ['->' Predicate]
-PredOr          -> PredAnd ('or' PredAnd)*
-PredAnd         -> PredNot ('and' PredNot)*
-PredNot         -> 'not' PredNot | PredAtom
+Predicate       ::= PredOr ['::=' Predicate]
+PredOr          ::= PredAnd ('or' PredAnd)*
+PredAnd         ::= PredNot ('and' PredNot)*
+PredNot         ::= 'not' PredNot | PredAtom
 
-PredAtom        -> TRUE 
+PredAtom        ::= TRUE 
                  | FALSE 
                  | Quantifier 
                  | '(' Predicate ')' 
                  | FormulaRef 
                  | ComparisonInPred
 
-FormulaRef      -> ID '(' ExprList ')'
-ComparisonInPred-> Expr [('==' | '!=' | '>=' | '<=' | '>' | '<') Expr]
+FormulaRef      ::= ID '(' ExprList ')'
+ComparisonInPred::= Expr [('==' | '!=' | '>=' | '<=' | '>' | '<') Expr]
 
-Quantifier      -> ('forall' | 'exists') '(' ID ':' Type Predicate ')'
+Quantifier      ::= ('forall' | 'exists') '(' ID ':' Type Predicate ')'
