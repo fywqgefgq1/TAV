@@ -1,0 +1,412 @@
+{
+  "ast": {
+    "_type": "Program",
+    "functions": [
+      {
+        "_type": "Function",
+        "name": "g",
+        "params": [
+          [
+            "a",
+            "int"
+          ],
+          [
+            "b",
+            "int"
+          ]
+        ],
+        "returns": [
+          [
+            "r",
+            "int"
+          ]
+        ],
+        "requires": null,
+        "ensures": null,
+        "uses": [],
+        "body": {
+          "_type": "Block",
+          "stmts": [
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "r",
+                "pos": 44,
+                "type": "int",
+                "kind": "return"
+              },
+              "value": {
+                "_type": "Var",
+                "name": "a",
+                "pos": 48,
+                "kind": "param",
+                "type": "int"
+              },
+              "pos": 44
+            }
+          ],
+          "pos": 42
+        },
+        "pos": 0,
+        "signature": {
+          "params": [
+            {
+              "name": "a",
+              "type": "int"
+            },
+            {
+              "name": "b",
+              "type": "int"
+            }
+          ],
+          "returns": [
+            {
+              "name": "r",
+              "type": "int"
+            }
+          ]
+        },
+        "type": "(int, int) -> (int)",
+        "symbols": [
+          {
+            "name": "a",
+            "type": "int",
+            "kind": "param",
+            "inferred": false
+          },
+          {
+            "name": "b",
+            "type": "int",
+            "kind": "param",
+            "inferred": false
+          },
+          {
+            "name": "r",
+            "type": "int",
+            "kind": "return",
+            "inferred": false
+          }
+        ]
+      },
+      {
+        "_type": "Function",
+        "name": "f",
+        "params": [
+          [
+            "x",
+            "int"
+          ],
+          [
+            "a",
+            "int[]"
+          ]
+        ],
+        "returns": [
+          [
+            "r",
+            "int"
+          ]
+        ],
+        "requires": null,
+        "ensures": null,
+        "uses": [],
+        "body": {
+          "_type": "Block",
+          "stmts": [
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "r",
+                "pos": 102,
+                "type": "int",
+                "kind": "return"
+              },
+              "value": {
+                "_type": "BinOp",
+                "op": "PLUS",
+                "left": {
+                  "_type": "Var",
+                  "name": "y",
+                  "pos": 106,
+                  "kind": null,
+                  "type": "<error>"
+                },
+                "right": {
+                  "_type": "IntLit",
+                  "value": 1,
+                  "pos": 110,
+                  "type": "int"
+                },
+                "pos": 108,
+                "type": "int"
+              },
+              "pos": 102
+            },
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "r",
+                "pos": 115,
+                "type": "int",
+                "kind": "return"
+              },
+              "value": {
+                "_type": "FuncCall",
+                "name": "g",
+                "args": [
+                  {
+                    "_type": "Var",
+                    "name": "x",
+                    "pos": 121,
+                    "kind": "param",
+                    "type": "int"
+                  }
+                ],
+                "pos": 119,
+                "ret_types": [
+                  "int"
+                ],
+                "callee": "(int, int) -> (int)",
+                "type": "int"
+              },
+              "pos": 115
+            },
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "r",
+                "pos": 127,
+                "type": "int",
+                "kind": "return"
+              },
+              "value": {
+                "_type": "BoolLit",
+                "value": true,
+                "pos": 131,
+                "type": "bool"
+              },
+              "pos": 127
+            },
+            {
+              "_type": "IfStmt",
+              "cond": {
+                "_type": "Var",
+                "name": "x",
+                "pos": 143,
+                "kind": "param",
+                "type": "int"
+              },
+              "then_stmt": {
+                "_type": "Assign",
+                "target": {
+                  "_type": "Var",
+                  "name": "r",
+                  "pos": 146,
+                  "type": "int",
+                  "kind": "return"
+                },
+                "value": {
+                  "_type": "ArrayAccess",
+                  "array": {
+                    "_type": "Var",
+                    "name": "a",
+                    "pos": 150,
+                    "kind": "param",
+                    "type": "int[]"
+                  },
+                  "index": {
+                    "_type": "BoolLit",
+                    "value": true,
+                    "pos": 152,
+                    "type": "bool"
+                  },
+                  "pos": 150,
+                  "type": "int"
+                },
+                "pos": 146
+              },
+              "else_stmt": null,
+              "pos": 139
+            },
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "ArrayAccess",
+                "array": {
+                  "_type": "Var",
+                  "name": "a",
+                  "pos": 161,
+                  "kind": "param",
+                  "type": "int[]"
+                },
+                "index": {
+                  "_type": "IntLit",
+                  "value": 0,
+                  "pos": 163,
+                  "type": "int"
+                },
+                "pos": 161,
+                "type": "int"
+              },
+              "value": {
+                "_type": "IntLit",
+                "value": 1,
+                "pos": 168,
+                "type": "int"
+              },
+              "pos": 161
+            },
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "t",
+                "pos": 173,
+                "type": "int",
+                "kind": "local"
+              },
+              "value": {
+                "_type": "IntLit",
+                "value": 1,
+                "pos": 177,
+                "type": "int"
+              },
+              "pos": 173
+            },
+            {
+              "_type": "Assign",
+              "target": {
+                "_type": "Var",
+                "name": "t",
+                "pos": 182,
+                "type": "int",
+                "kind": "local"
+              },
+              "value": {
+                "_type": "Var",
+                "name": "a",
+                "pos": 186,
+                "kind": "param",
+                "type": "int[]"
+              },
+              "pos": 182
+            }
+          ],
+          "pos": 98
+        },
+        "pos": 54,
+        "signature": {
+          "params": [
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "a",
+              "type": "int[]"
+            }
+          ],
+          "returns": [
+            {
+              "name": "r",
+              "type": "int"
+            }
+          ]
+        },
+        "type": "(int, int[]) -> (int)",
+        "symbols": [
+          {
+            "name": "x",
+            "type": "int",
+            "kind": "param",
+            "inferred": false
+          },
+          {
+            "name": "a",
+            "type": "int[]",
+            "kind": "param",
+            "inferred": false
+          },
+          {
+            "name": "r",
+            "type": "int",
+            "kind": "return",
+            "inferred": false
+          },
+          {
+            "name": "t",
+            "type": "int",
+            "kind": "local",
+            "inferred": true
+          }
+        ]
+      }
+    ],
+    "formulas": [],
+    "globals": {
+      "g": {
+        "kind": "function",
+        "type": "(int, int) -> (int)"
+      },
+      "f": {
+        "kind": "function",
+        "type": "(int, int[]) -> (int)"
+      }
+    }
+  },
+  "errors": [
+    {
+      "phase": "semantic",
+      "message": "undeclared variable 'y'",
+      "pos": 106,
+      "line": 5,
+      "col": 7
+    },
+    {
+      "phase": "semantic",
+      "message": "function 'g' expects 2 argument(s), got 1",
+      "pos": 119,
+      "line": 6,
+      "col": 7
+    },
+    {
+      "phase": "semantic",
+      "message": "cannot assign bool to variable 'r' of type int",
+      "pos": 127,
+      "line": 7,
+      "col": 3
+    },
+    {
+      "phase": "semantic",
+      "message": "condition of 'if' must be bool, got int",
+      "pos": 143,
+      "line": 8,
+      "col": 7
+    },
+    {
+      "phase": "semantic",
+      "message": "array index must be int, got bool",
+      "pos": 152,
+      "line": 8,
+      "col": 16
+    },
+    {
+      "phase": "semantic",
+      "message": "cannot modify an element of parameter 'a' (parameters are read-only)",
+      "pos": 161,
+      "line": 9,
+      "col": 3
+    },
+    {
+      "phase": "semantic",
+      "message": "cannot assign int[] to variable 't' of type int (its type was inferred from the first assignment at line 10, col 3)",
+      "pos": 182,
+      "line": 11,
+      "col": 3
+    }
+  ]
+}

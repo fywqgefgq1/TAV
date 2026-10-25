@@ -1,0 +1,84 @@
+TYPES
+int
+int[]
+bool
+func
+
+LITERALS AND NAMES
+<digits> : int
+true : bool
+false : bool
+x : type of x
+f : error (function used as value)
+
+EXPRESSIONS
+-expr : int
+expr + expr : int
+expr - expr : int
+expr * expr : int
+expr / expr : int
+a[expr] : int
+length(a) : int
+f(expr, ...) : return type of f
+
+CONDITIONS AND PREDICATES
+expr == expr : bool
+expr != expr : bool
+expr < expr : bool
+expr <= expr : bool
+expr > expr : bool
+expr >= expr : bool
+not P : bool
+P and P : bool
+P or P : bool
+P → P : bool
+forall(x: T P) : bool
+exists(x: T P) : bool
+F(expr, ...) : bool
+
+STATEMENTS
+x = expr; : none
+a[expr] = expr; : none
+x, y, ... = f(expr, ...); : none
+if (P) S : none
+if (P) S else S : none
+while (P) S : none
+while (P) invariant P S : none
+{ S ... } : none
+assert P; : none
+assume P; : none
+
+DEFINITIONS
+function f(x: T, ...) [requires P] returns y: T, ... [ensures P] [uses z: int, ...] S : (T, ...) -> (T, ...)
+f(x: T, ...) → P; : (T, ...) -> (bool)
+
+VARIABLE TYPES
+parameter : int | int[]
+return value : int | int[]
+local (uses or inferred) : int
+quantifier variable : int | int[]
+
+OPERAND TYPES
++ - * / : int, int
+== != < <= > >= : int, int
+and or → : bool, bool
+not : bool
+-expr : int
+a[i] : a int[], i int
+length(a) : a int[]
+if/while condition, invariant, assert, assume, requires, ensures, formula body : bool
+x = expr : expr unifies with type of x
+a[i] = expr : expr int
+call argument i : unifies with parameter i
+
+SCOPES
+requires : parameters
+ensures : parameters, return values
+body, invariant, assert, assume : parameters, return values, locals
+quantifier body : enclosing scope + quantifier variable
+formula body : formula parameters
+
+ASSIGNABLE
+return value, local, element of return array : yes
+parameter, element of parameter array, function, formula : no
+undeclared name : declares local with type of first assignment
