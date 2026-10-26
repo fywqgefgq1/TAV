@@ -493,7 +493,7 @@ def format_diag(d, text):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="HW3: semantic analysis and type checking for Funny")
+    ap = argparse.ArgumentParser()
     ap.add_argument("source", help="program text")
     ap.add_argument("-o", "--output", default="typed_ast.json", help="annotated AST (JSON)")
     ap.add_argument("--no-infer", action="store_true",

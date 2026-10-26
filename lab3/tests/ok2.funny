@@ -1,0 +1,4 @@
+function g(x: int) returns r: int {
+  if (x > 0) t = 1; else t = 2;
+  r = t;
+}
