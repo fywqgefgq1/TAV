@@ -1,0 +1,18 @@
+function twice(x: int) returns y: int
+{
+  y = x * 2;
+}
+
+function divmod(a: int, b: int) returns q: int, m: int
+{
+  q = a / b;
+  m = a - q * b;
+}
+
+function use_calls(x: int, y: int) returns r: int
+uses q: int, m: int
+{
+  q, m = divmod(x, y);
+  t = twice(3 + 4);
+  r = q * 10 + m + t + twice(x);
+}

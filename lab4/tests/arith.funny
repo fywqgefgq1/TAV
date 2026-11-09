@@ -1,0 +1,12 @@
+function arith(x: int, y: int) returns r: int, s: int
+{
+  a = 2 + 3 * 4;
+  b = a * 1 + 0;
+  c = x * 0 + y - 0;
+  d = (x + y) * (x + y);
+  e = (x + y) * 2;
+  f = d - d;
+  g = -(-5) + b;
+  r = e + c + g + f;
+  s = a;
+}

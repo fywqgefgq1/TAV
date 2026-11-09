@@ -1,0 +1,12 @@
+function g(a: int, b: int) returns r: int { r = a; }
+
+function f(x: int, a: int[]) returns r: int
+{
+  r = y + 1;
+  r = g(x);
+  r = true;
+  if (x) r = a[true];
+  a[0] = 1;
+  t = 1;
+  t = a;
+}

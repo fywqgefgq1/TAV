@@ -1,0 +1,10 @@
+func demo(a: int, b: int) -> (r: int)
+  locals: x: int, y: int, z: int, dead: int
+  temps:  $t1: int, $t3: int
+  entry:
+    $t1 = a * b
+    y = $t1 + 1
+    z = $t1 + 17
+    $t3 = y + z
+    r = $t3 + a
+    ret r

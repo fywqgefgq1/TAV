@@ -1,0 +1,12 @@
+function sum(a: int[], n: int)
+requires n >= 0 and n <= length(a)
+returns r: int
+uses i: int
+{
+  r = 0;
+  i = 0;
+  while (i < n) invariant i >= 0 {
+    r = r + a[i];
+    i = i + 1;
+  }
+}

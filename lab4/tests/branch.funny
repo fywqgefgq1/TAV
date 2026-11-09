@@ -1,0 +1,9 @@
+function classify(x: int, k: int) returns r: int
+{
+  t = 10;
+  if (t > 5) r = x + 1; else r = x - 1;
+  if (x < x) r = r + 100;
+  if (k == 0 or x > t) r = r * 2;
+  if (k != 0 and x / k > 1) r = r + 7;
+  assert r == r;
+}

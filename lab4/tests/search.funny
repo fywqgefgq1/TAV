@@ -1,0 +1,21 @@
+function find_max(a: int[], n: int) returns m: int
+uses i: int
+{
+  m = a[0];
+  i = 1;
+  while (i < n) {
+    if (a[i] > m) m = a[i];
+    i = i + 1;
+  }
+}
+
+function dot(a: int[], b: int[], n: int) returns s: int
+uses i: int
+{
+  s = 0;
+  i = 0;
+  while (i < n) {
+    s = s + a[i] * b[i];
+    i = i + 1;
+  }
+}
